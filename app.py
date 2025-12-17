@@ -58,9 +58,13 @@ def init_db():
                 )
             """)
 
-@app.before_first_request
 def setup():
-    init_db()
+    try:
+        init_db()
+    except Exception as e:
+        print("DB init failed:", e)
+
+setup()
 
 @app.route("/", methods=["GET", "POST"])
 def home():
