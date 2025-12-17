@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Questionnaire Étudiant</title>
+</head>
+<body>
+    <h1>Questionnaire</h1>
+    <form action="/submit" method="post">
+        <label for="name">Nom (optionnel) :</label>
+        <input type="text" id="name" name="name"><br><br>
+
+        <label for="response">Ta réponse :</label><br>
+        <textarea id="response" name="response" rows="4" cols="50" required></textarea><br><br>
+
+        <input type="checkbox" id="consent" name="consent" required>
+        <label for="consent">J’accepte que mes réponses soient collectées et traitées conformément à la politique de confidentialité.</label><br><br>
+
+        <input type="submit" value="Envoyer">
+    </form>
+</body>
+</html>
