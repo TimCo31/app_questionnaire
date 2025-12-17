@@ -1,21 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Questionnaire Étudiant</title>
+    <meta charset="utf-8">
+    <title>Questionnaire GI</title>
 </head>
 <body>
     <h1>Questionnaire</h1>
-    <form action="/submit" method="post">
-        <label for="name">Nom (optionnel) :</label>
-        <input type="text" id="name" name="name"><br><br>
 
-        <label for="response">Ta réponse :</label><br>
-        <textarea id="response" name="response" rows="4" cols="50" required></textarea><br><br>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <p style="color: green">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
 
-        <input type="checkbox" id="consent" name="consent" required>
-        <label for="consent">J’accepte que mes réponses soient collectées et traitées conformément à la politique de confidentialité.</label><br><br>
-
-        <input type="submit" value="Envoyer">
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.name.label }}<br>
+            {{ form.name(size=40) }}
+        </p>
+        <p>
+            {{ form.response.label }}<br>
+            {{ form.response(rows=5, cols=40) }}
+        </p>
+        <p>
+            {{ form.consent() }} {{ form.consent.label }}
+        </p>
+        <p><input type="submit" value="Envoyer"></p>
     </form>
 </body>
 </html>

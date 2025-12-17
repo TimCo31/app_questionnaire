@@ -20,7 +20,6 @@ csrf = CSRFProtect(app)
 database_url = os.getenv("DATABASE_URL")
 
 if database_url:
-    # Si on est sur Heroku, parse DATABASE_URL
     result = urllib.parse.urlparse(database_url)
     DB_CONFIG = {
         "host": result.hostname,
@@ -28,7 +27,7 @@ if database_url:
         "user": result.username,
         "password": result.password,
         "port": result.port,
-        "sslmode": "require"  # Heroku PostgreSQL
+        "sslmode": "require"  # PostgreSQL
     }
 else:
     # Local
@@ -60,7 +59,9 @@ def init_db():
                 )
             """)
 
-init_db()
+@app.before_first_request
+def setup():
+    init_db()
 
 @app.route("/", methods=["GET", "POST"])
 def home():
