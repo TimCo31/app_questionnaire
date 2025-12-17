@@ -7,7 +7,6 @@ import os
 from dotenv import load_dotenv
 import urllib.parse
 
-# Charger les variables d'environnement
 load_dotenv()
 
 app = Flask(__name__)
