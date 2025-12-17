@@ -45,29 +45,26 @@ class QuestionnaireForm(FlaskForm):
     response = TextAreaField("Réponse", validators=[DataRequired()])
     consent = BooleanField("Je consens au traitement", validators=[DataRequired()])
 
-def init_db():
-    """Créer la table responses si elle n'existe pas"""
-    with psycopg.connect(**DB_CONFIG) as conn:
-        with conn.cursor() as cur:
-            cur.execute("""
-                CREATE TABLE IF NOT EXISTS responses (
-                    id SERIAL PRIMARY KEY,
-                    name TEXT NOT NULL,
-                    response TEXT NOT NULL,
-                    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
-            """)
 
-def setup():
+def ensure_table():
+    """Créer la table responses si elle n'existe pas"""
     try:
-        init_db()
+        with psycopg.connect(**DB_CONFIG) as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS responses (
+                        id SERIAL PRIMARY KEY,
+                        name TEXT NOT NULL,
+                        response TEXT NOT NULL,
+                        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    )
+                """)
     except Exception as e:
         print("DB init failed:", e)
 
-setup()
-
 @app.route("/", methods=["GET", "POST"])
 def home():
+    ensure_table()
     form = QuestionnaireForm()
     if form.validate_on_submit():
         name = form.name.data
