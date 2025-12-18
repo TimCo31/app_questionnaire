@@ -26,8 +26,13 @@ if database_url:
         "user": result.username,
         "password": result.password,
         "port": result.port,
-        "sslmode": "require"  # PostgreSQL
+        "sslmode": "require"  # Connexion sécurisée
     }
+    # Endpoint privé pour ne pas avoir de coûts
+    private_host = os.getenv("RAILWAY_PRIVATE_DOMAIN")
+    if private_host:
+        DB_CONFIG["host"] = private_host
+        DB_CONFIG["sslmode"] = "require"
 else:
     # Local
     DB_CONFIG = {
@@ -38,6 +43,14 @@ else:
         "port": int(os.getenv("DB_PORT", 5432)),
         "sslmode": "disable"  # Désactive SSL pour la DB locale
     }
+
+# Sécurité cookies en production
+if os.getenv("RAILWAY_ENVIRONMENT_NAME"):
+    app.config.update(
+        SESSION_COOKIE_SECURE=True,
+        SESSION_COOKIE_SAMESITE="Lax",
+        WTF_CSRF_SSL_STRICT=True
+    )
 
 # Formulaire avec validation
 class QuestionnaireForm(FlaskForm):
@@ -75,9 +88,12 @@ def home():
                     "INSERT INTO responses (name, response) VALUES (%s, %s)",
                     (name, response)
                 )
-        flash("Merci pour votre participation !", "success")
-        return redirect(url_for("home"))
+        return redirect(url_for("merci"))
     return render_template("form.html", form=form)
+
+@app.route("/merci")
+def merci():
+    return render_template("merci.html")
 
 if __name__ == "__main__":
     app.run(debug=False)
