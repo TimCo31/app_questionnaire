@@ -7,14 +7,6 @@
 <body>
     <h1>Questionnaire</h1>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <p style="color: green">{{ message }}</p>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-
     <form method="POST">
         {{ form.hidden_tag() }}
         <p>
