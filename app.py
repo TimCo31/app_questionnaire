@@ -28,11 +28,6 @@ if database_url:
         "port": result.port,
         "sslmode": "require"  # Connexion sécurisée
     }
-    # Endpoint privé pour ne pas avoir de coûts
-    private_host = os.getenv("RAILWAY_PRIVATE_DOMAIN")
-    if private_host:
-        DB_CONFIG["host"] = private_host
-        DB_CONFIG["sslmode"] = "require"
 else:
     # Local
     DB_CONFIG = {
